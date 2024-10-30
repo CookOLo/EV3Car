@@ -1,6 +1,7 @@
 % Connections and Disconnects
 %clear all;
-%brick = ConnectBrick('G11');
+clear
+brick = ConnectBrick('G11');
 %brick = DisconnectBrick('G11');
 %clear 'G11'
 
@@ -64,58 +65,49 @@ end
 %}
 
 %Auto Movement
-i = 0;
-while i == 0
-    %distance = brick.UltrasonicDist(4);
-    %key = input('Press a key (type "q" to quit): ', 's');
-    touch = brick.TouchPressed(1);
-    stopped = false;
-    
-    %{
-    while ~touch
-        brick.MoveMotor('A', -60);
-        brick.MoveMotor('D', -72);
-    end
-    %}
+while true
+    % Check the touch sensor
+    touch = brick.TouchPressed(1);  % Reads touch sensor status
+    distance = brick.UltrasonicDist(4);
 
     if touch
-        %Reverses the brick then makes 90 degree angle
-        disp("test");
-        brick.MoveMotor('A', 80);
-        brick.MoveMotor('D', 92);
 
-        %Waits until brick motion is completed
-        pause(1.8);
-        brick.MoveMotor('D', -98);
-        brick.MoveMotor('A', 0);
-        pause(3.1);
-        brick.StopMotor('A');
-        brick.StopMotor('D');
-    else 
-        brick.MoveMotor('A', -60);
-        brick.MoveMotor('D', -72);
-        %brick.MoveMotor('A', 0);
-        %brick.MoveMotor('D', 0);
-    %Shortcut for ending operation
-    
-    %elseif strcmp(key, 'q')
-    %    brick.StopMotor('A', 'Brake');
-    %    brick.StopMotor('D', 'Brake');
-    %    break;
-    
-    %Moves forward if nothing touches touch sensor
-    
+        % Obstacle detected - reverse and turn to avoid it
+        disp("Obstacle detected! Reversing and turning.");
+
+        % Step 1: Reverse for a short distance
+        brick.MoveMotor('A', 80);  % Reverse motor A
+        brick.MoveMotor('D', 97);  % Reverse motor D
+        pause(.9);                % Reverse for 1.8 seconds
+        brick.StopAllMotors('Brake');  % Stop all motors
+        
+        
+        if distance > 45
+            brick.MoveMotor('D', -908);  % Left motor moves backward
+            brick.MoveMotor('A', 95);   % Right motor moves forward
+            pause(1.85);                 % Pause to complete a 90-degree turn
+            brick.StopAllMotors('Brake');  % Stop all motors after turning
+        else
+            brick.MoveMotor('D', 95);  % Left motor moves backward
+            brick.MoveMotor('A', -908);   % Right motor moves forward
+            pause(1.85);                 % Pause to complete a 90-degree turn
+            brick.StopAllMotors('Brake');  % Stop all motors after turning
+        end
+        
+        % Step 3: Resume forward movement
+        disp("Resuming forward movement.");
+    else
+        % No obstacle detected - continue moving forward
+        brick.MoveMotor('A', -60);  % Forward motor A
+        brick.MoveMotor('D', -72);  % Forward motor D
     end
-     
-    %Test for ultrasonic sensor
-    %{
-    if distance < 3
-        brick.MoveMotor('A', -60);
-        brick.MoveMotor('D', -72);
-    end
-    %}
+
+    % Short delay before next sensor check
+    pause(0.1);  % Prevents continuous loop overload
 end
-  
+
+
+ 
 
 
 
