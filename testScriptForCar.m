@@ -1,6 +1,6 @@
 % Connections and Disconnects
 %clear all;
-clear
+%clear
 brick = ConnectBrick('G11');
 %brick = DisconnectBrick('G11');
 %clear 'G11'
@@ -24,6 +24,14 @@ brick = ConnectBrick('G11');
 
 %ULTRASONIC SENSOR
 %distance = brick.UltrasonicDist(SensorPort);
+
+%COLOR
+%brick.SetColorMode(1, 2); % Set Color Sensor connected to Port 1 to Color Code Mode
+
+color = brick.ColorCode(1); % Get Color on port 1.
+
+display(color); % Print color code of the object.
+
 %}
 
 %Movement by Control
@@ -64,33 +72,37 @@ while 1
 end
 %}
 
+
+
 %Auto Movement
+
 while true
     % Check the touch sensor
     touch = brick.TouchPressed(1);  % Reads touch sensor status
     distance = brick.UltrasonicDist(4);
 
+    
     if touch
 
         % Obstacle detected - reverse and turn to avoid it
         disp("Obstacle detected! Reversing and turning.");
 
         % Step 1: Reverse for a short distance
-        brick.MoveMotor('A', 80);  % Reverse motor A
-        brick.MoveMotor('D', 97);  % Reverse motor D
-        pause(.9);                % Reverse for 1.8 seconds
+        brick.MoveMotor('A', 120);  % Reverse motor A
+        brick.MoveMotor('D', 50);  % Reverse motor D
+        pause(1.2);                % Reverse for 1.8 seconds
         brick.StopAllMotors('Brake');  % Stop all motors
         
         
         if distance > 45
-            brick.MoveMotor('D', -908);  % Left motor moves backward
-            brick.MoveMotor('A', 95);   % Right motor moves forward
-            pause(1.85);                 % Pause to complete a 90-degree turn
+            brick.MoveMotor('D', -980);  % Left motor moves backward
+            brick.MoveMotor('A', 80);   % Right motor moves forward
+            pause(1.7);                 % Pause to complete a 90-degree turn
             brick.StopAllMotors('Brake');  % Stop all motors after turning
         else
-            brick.MoveMotor('D', 95);  % Left motor moves backward
-            brick.MoveMotor('A', -908);   % Right motor moves forward
-            pause(1.85);                 % Pause to complete a 90-degree turn
+            brick.MoveMotor('D', 80);  % Left motor moves backward
+            brick.MoveMotor('A', -980);   % Right motor moves forward
+            pause(1.7);                 % Pause to complete a 90-degree turn
             brick.StopAllMotors('Brake');  % Stop all motors after turning
         end
         
@@ -107,7 +119,48 @@ while true
 end
 
 
- 
+%Color Sensor Test
+%{
+while true
+    brick.SetColorMode(2, 2);
+    color = brick.ColorCode(2);
+    disp(color);
+    
+    %Testing with beeps
+    
+    if color == 5  % If red is found
+        brick.StopAllMotors('Brake');
+        brick.beep();
+        pause(0.1);
+        brick.StopAllMotors('Brake');
+    end
+    
+    if color == 2  % If blue is found
+        brick.StopAllMotors('Brake');
+        for i = 1:2
+            brick.beep();
+            pause(0.5); % Small pause between beeps
+        end
+        brick.StopAllMotors('Brake');
+    end
 
+    if color == 3  %If green is found
+        brick.StopAllMotors('Brake');
+        for i = 1:3
+            brick.beep();
+            pause(0.5); % Small pause between beeps
+        end
+        brick.StopAllMotors('Brake');
+    end
 
+    if color == 4  % If yellow is found
+        brick.StopAllMotors('Brake');
+        for i = 1:4
+            brick.beep();
+            pause(0.5); % Small pause between beeps
+        end
+        brick.StopAllMotors('Brake');
+    end
 
+end
+%}
