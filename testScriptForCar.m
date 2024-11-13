@@ -163,22 +163,32 @@ end
 
 %Color Sensor Test
 
+
 while true
     brick.SetColorMode(2, 2);
     color = brick.ColorCode(2);
     disp(color);
+
+    brick.MoveMotor('A', -60);  % Forward motor A
+    brick.MoveMotor('D', -72);
+
     
     if color ~= previousColor
     %Testing with beeps
         brick.StopAllMotors('Brake');
+        brick.MoveMotor('A', 0);  % Forward motor A
+        brick.MoveMotor('D', -0);
         if color == 5  % If red is found
+                brick.MoveMotor('A', 0);  % Forward motor A
+                brick.MoveMotor('D', 0);
                 brick.beep();
                 pause(1);
-            
         end
     
         if color == 2  % If blue is found
             for i = 1:2 
+                brick.MoveMotor('A', 0);  % Forward motor A
+                brick.MoveMotor('D', 0);
                 brick.beep();
                 pause(.5); % Small pause between beeps
             end
@@ -186,6 +196,8 @@ while true
 
         if color == 3  %If green is found
             for i = 1:3
+                brick.MoveMotor('A', 0);  % Forward motor A
+                brick.MoveMotor('D', 0);
                 brick.beep();
                 pause(.5); % Small pause between beeps
             end
@@ -193,11 +205,16 @@ while true
 
         if color == 4  % If yellow is found
             for i = 1:4
+                brick.MoveMotor('A', 0);  % Forward motor A
+                brick.MoveMotor('D', 0);
                 brick.beep();
                 pause(.5); % Small pause between beeps
             end
         end
         brick.StopAllMotors('Brake');
+        brick.MoveMotor('A', 0);  % Forward motor A
+        
+        brick.MoveMotor('D', 0);
         pause(1);
     end
     previousColor = color;
