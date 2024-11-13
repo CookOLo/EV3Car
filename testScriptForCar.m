@@ -77,7 +77,7 @@ end
 %Auto Movement
 
 previousColor = -1; 
-
+%{
 while true
     % Check the touch sensor
     touch = brick.TouchPressed(1);  % Reads touch sensor status
@@ -159,10 +159,10 @@ while true
     end
     previousColor = color;
 end
-
+%}
 
 %Color Sensor Test
-%{
+
 while true
     brick.SetColorMode(2, 2);
     color = brick.ColorCode(2);
@@ -170,40 +170,36 @@ while true
     
     if color ~= previousColor
     %Testing with beeps
-    if color == 5  % If red is found
         brick.StopAllMotors('Brake');
-        brick.beep();
-        pause(1);
-        brick.StopAllMotors('Brake');
-    end
+        if color == 5  % If red is found
+                brick.beep();
+                pause(1);
+            
+        end
     
-    if color == 2  % If blue is found
-        brick.StopAllMotors('Brake');
-        for i = 1:2
-            brick.beep();
-            pause(1); % Small pause between beeps
+        if color == 2  % If blue is found
+            for i = 1:2 
+                brick.beep();
+                pause(.5); % Small pause between beeps
+            end
         end
-        brick.StopAllMotors('Brake');
-    end
 
-    if color == 3  %If green is found
-        brick.StopAllMotors('Brake');
-        for i = 1:3
-            brick.beep();
-            pause(1); % Small pause between beeps
+        if color == 3  %If green is found
+            for i = 1:3
+                brick.beep();
+                pause(.5); % Small pause between beeps
+            end
         end
-        brick.StopAllMotors('Brake');
-    end
 
-    if color == 4  % If yellow is found
-        brick.StopAllMotors('Brake');
-        for i = 1:4
-            brick.beep();
-            pause(1); % Small pause between beeps
+        if color == 4  % If yellow is found
+            for i = 1:4
+                brick.beep();
+                pause(.5); % Small pause between beeps
+            end
         end
         brick.StopAllMotors('Brake');
-    end
+        pause(1);
     end
     previousColor = color;
 end
-%}
+
