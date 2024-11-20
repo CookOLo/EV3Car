@@ -2,6 +2,7 @@
 %clear all;
 %clear
 brick = ConnectBrick('G11');
+
 %brick = DisconnectBrick('G11');
 %clear 'G11'
 
@@ -72,12 +73,75 @@ while 1
 end
 %}
 
+%Remote Control
+%{
+remote = true;
+auto = false
 
+global key;
+
+
+InitKeyboard();
+
+while remote == true
+    pause(0.1);
+
+    switch key
+        case 'uparrow'
+            disp('Up Arrow Pressed!');
+            brick.MoveMotorAngleAbs('B', -1, 0, 'Brake');
+            brick.WaitForMotor('B');
+            pause(0.01);
+        
+        case 'downarrow'
+            disp('Down Arrow Pressed!');
+            brick.MoveMotorAngleAbs('B', 1, 0, 'Brake');
+            brick.WaitForMotor('B');
+            pause(0.01);
+
+        case 'leftarrow'
+            disp('Left Arrow Pressed!');
+            brick.MoveMotor('B', 0);
+            brick.StopAllMotors('Brake');
+
+        case 'w'
+            brick.MoveMotor('A', -30);  % Forward motor A
+            brick.MoveMotor('D', -30);  % Forward motor D
+
+        case 's'
+            brick.MoveMotor('A', 30);  % Forward motor A
+            brick.MoveMotor('D', 30);  % Forward motor D
+        
+        case 'a'
+            brick.MoveMotor('A', 30);   % Left motor moves backward
+            brick.MoveMotor('D', -50);  % Right motor moves forward
+        
+        case 'd'
+            brick.MoveMotor('A', -50);% Left motor moves forward
+            brick.MoveMotor('D', 30);  % Right motor moves backward
+
+        case 'space'
+            brick.MoveMotor('A', 0);  % Forward motor A
+            brick.MoveMotor('D', 0);  % Forward motor D
+
+        
+        case 0
+            disp('No Key Pressed!');
+        
+        case 'q'
+            remove = false;
+            auto = true;
+    end
+end
+
+CloseKeyboard();
+%}
 
 %Auto Movement
 
 previousColor = -1; 
-%{
+
+
 while true
     % Check the touch sensor
     touch = brick.TouchPressed(1);  % Reads touch sensor status
@@ -90,31 +154,44 @@ while true
         disp("Obstacle detected! Reversing and turning.");
 
         % Step 1: Reverse for a short distance
-        brick.MoveMotor('A', 120);  % Reverse motor A
+        brick.MoveMotor('A', 50);  % Reverse motor A
         brick.MoveMotor('D', 50);  % Reverse motor D
-        pause(1.2);                % Reverse for 1.8 seconds
+        pause(.5);                % Reverse for 1.8 seconds
         brick.StopAllMotors('Brake');  % Stop all motors
+        pause(.5);  
+        brick.MoveMotor('A', 40);   % Left motor moves backward
+        brick.MoveMotor('D', -40);  % Right motor moves forward
+            
+        pause(.8);                 % Pause to complete a 90-degree turn
+        brick.StopAllMotors('Brake');  % Stop all motors after turning
         
+        %%
         
+        %Left Turn Code
+        %{
         if distance > 45
-            brick.MoveMotor('D', -980);  % Left motor moves backward
-            brick.MoveMotor('A', 80);   % Right motor moves forward
-            pause(1.7);                 % Pause to complete a 90-degree turn
+            brick.MoveMotor('A', 100);   % Left motor moves backward
+            brick.MoveMotor('D', -9999999999999);  % Right motor moves forward
+            
+            pause(1.5);                 % Pause to complete a 90-degree turn
             brick.StopAllMotors('Brake');  % Stop all motors after turning
+        %Right Turn Code
         else
-            brick.MoveMotor('D', 80);  % Left motor moves backward
-            brick.MoveMotor('A', -980);   % Right motor moves forward
-            pause(1.7);                 % Pause to complete a 90-degree turn
+            brick.MoveMotor('A', -9999999999999);% Left motor moves forward
+            brick.MoveMotor('D', 100);  % Right motor moves backward
+            pause(1.5);                 % Pause to complete a 90-degree turn
             brick.StopAllMotors('Brake');  % Stop all motors after turning
         end
         
         % Step 3: Resume forward movement
         disp("Resuming forward movement.");
+%}
     else
         % No obstacle detected - continue moving forward
-        brick.MoveMotor('A', -60);  % Forward motor A
-        brick.MoveMotor('D', -72);  % Forward motor D
+        brick.MoveMotor('A', -50);  % Forward motor A
+        brick.MoveMotor('D', -50);  % Forward motor D
     end
+        
 
     
 
@@ -129,9 +206,8 @@ while true
     %Testing with beeps
         brick.StopAllMotors('Brake');
         if color == 5  % If red is found
-                brick.beep();
-                pause(1);
-            
+            brick.beep();
+            pause(1);
         end
     
         if color == 2  % If blue is found
@@ -154,16 +230,22 @@ while true
                 pause(.5); % Small pause between beeps
             end
         end
-        brick.StopAllMotors('Brake');
+        brick.MoveMotor('A', 0);  % Forward motor A
+        brick.MoveMotor('D', 0);
+        %brick.StopAllMotors('Brake');
         pause(1);
     end
     previousColor = color;
 end
-%}
+
+
+
+
+
 
 %Color Sensor Test
 
-
+%{
 while true
     brick.SetColorMode(2, 2);
     color = brick.ColorCode(2);
@@ -219,4 +301,5 @@ while true
     end
     previousColor = color;
 end
+%}
 
