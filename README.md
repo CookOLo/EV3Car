@@ -1,4 +1,7 @@
-This ASU FSE100 Final Project involves using Matlab to remotely and autonomously move a car made from a Lego EV3 Kit. This project aims to imitate a rideshare service for the elderly and disabled. 
+# EV3 Automated Car
+
+## Objective
+This ASU FSE100 Final Project involves using Matlab to remotely and autonomously move a car made from a Lego EV3 Kit through a maze. This project aims to imitate a rideshare service for the elderly and disabled. 
 
 Specifically, the car would:
 1) Automously move to the Blue Tile
@@ -12,16 +15,21 @@ Specifically, the car would:
 
 As of 12/04/24, the project is completed. This was worked on by a team of four.
 
-
-
 Final Iteration: https://youtu.be/UxOwWiyrsro
 
-# EV3 Files
+## Skills Learned
+
+- Scripting with MATLAB
+- Communication and teamwork with a team of 4
+- Committing to an interally developed schedule
+- Development of critical thinking and problem solving skills in engineering
+
+## EV3 Files
 Needed in order for MATLAB to access the EV3 methods. Simply add to MATLAB folder, and in MATLAB:
   1) Right-Click on the Folder
   2) Add to Path > Selected Folders and Subfolders
 
-# MovementScript.m
+## MovementScript.m
 The actual code for the movement of the EV3 Car. 
 ### For Remote Control
 * W: Move Forward
