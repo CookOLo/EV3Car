@@ -24,6 +24,10 @@ Final Iteration: https://youtu.be/UxOwWiyrsro
 - Committing to an interally developed schedule
 - Development of critical thinking and problem solving skills in engineering
 
+## Tools Used
+- MATLAB for the scripting
+- EV3 Lego Kit to physically build the automated car
+
 ## EV3 Files
 Needed in order for MATLAB to access the EV3 methods. Simply add to MATLAB folder, and in MATLAB:
   1) Right-Click on the Folder
